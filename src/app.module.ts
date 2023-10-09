@@ -9,7 +9,14 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { OrdersModule } from './orders/orders.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(dataSourceOptions), UsersModule, CategoriesModule, ProductsModule, ReviewsModule, OrdersModule],
+  imports: [
+    TypeOrmModule.forRoot(dataSourceOptions),
+    UsersModule,
+    CategoriesModule,
+    ProductsModule,
+    ReviewsModule,
+    OrdersModule,
+  ],
   controllers: [],
   providers: [],
 })

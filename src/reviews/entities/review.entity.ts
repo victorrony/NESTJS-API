@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Timestamp,
@@ -30,6 +31,6 @@ export class ReviewEntity {
   @ManyToOne((type) => UserEntity, (user) => user.reviews)
   user: UserEntity;
 
-  @ManyToOne((type) => ProductEntity, (product) => product.reviews)
-  product: ProductEntity;
+  @ManyToOne((type) => ProductEntity, (prod) => prod.reviews)  
+  products: ProductEntity;
 }

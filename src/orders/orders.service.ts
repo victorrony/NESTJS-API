@@ -1,5 +1,5 @@
 import { OrderEntity } from 'src/orders/entities/order.entity';
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, forwardRef, Inject } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +18,7 @@ export class OrdersService {
     private orderRepository: Repository<OrderEntity>,
     @InjectRepository(OrdersProductsEntity)
     private readonly opRepository: Repository<OrdersProductsEntity>,
-    private readonly productService: ProductsService,
+    @Inject(forwardRef(() => ProductsService)) private readonly productService: ProductsService,
   ) {}
   async create(createOrderDto: CreateOrderDto, currentUser: UserEntity): Promise<OrderEntity> {
     const shiippingEntity = new ShippingEntity();
@@ -68,7 +68,7 @@ export class OrdersService {
     return await this.orderRepository.find({      
       relations: {
         shippingAddress: true,
-        products: { product: true },
+        products: { products: true },
         user: true,
       },
     });
@@ -79,10 +79,17 @@ export class OrdersService {
       where: { id },
       relations: {
         shippingAddress: true,
-        products: { product: true },
+        products: { products: true },
         user: true,
       },
     });
+  }
+
+  async findOneByProductId(id: number): Promise<OrderEntity> {
+    return await this.orderRepository.findOne({
+      relations:{products:true},
+      where:{products:{id:id}},
+    })
   }
 
   async update(id: number, updateOrderStatusDto: UpdateOrderStatusDto, currentUser: UserEntity) {
@@ -141,7 +148,7 @@ export class OrdersService {
   async stockUpdate(order:OrderEntity, status: string) {
     for(const op of order.products) {
       await this.productService.updateStock(
-        op.product.id,
+        op.products.id,
         op.product_quantity,
         status
       )

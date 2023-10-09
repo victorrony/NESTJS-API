@@ -21,14 +21,16 @@ export class ReviewsService {
     const product = await this.productService.findOne(
       +createReviewDto.productId,
     );
+    
     let review = await this.findOneByUserAndProduct(
       currentUser.id,
       createReviewDto.productId,
     );
+
     if (!review) {
       review = this.reviewRepository.create(createReviewDto);
       review.user = currentUser;
-      review.product = product;
+      review.products = product;
     } else {
       review.comment = createReviewDto.comment;
       review.ratings = createReviewDto.ratings;
@@ -43,10 +45,10 @@ export class ReviewsService {
   async findAllByProduct(id: number) {
     const product = await this.productService.findOne(id);
     return await this.reviewRepository.find({
-      where: { product: { id } },
+      where: { products: { id } },
       relations: {
         user: true,
-        product: {
+        products: {
           category: true,
         },
       },
@@ -57,7 +59,7 @@ export class ReviewsService {
       where: { id },
       relations: {
         user: true,
-        product: {
+        products: {
           category: true,
         },
       },
@@ -79,11 +81,11 @@ export class ReviewsService {
     return await this.reviewRepository.findOne({
       where: {
         user: { id: userId },
-        product: { id: productId },
+        products: { id: productId },
       },
       relations: {
         user: true,
-        product: {
+        products: {
           category: true,
         },
       },

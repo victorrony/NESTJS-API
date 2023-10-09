@@ -45,9 +45,9 @@ export class ProductEntity {
   @ManyToOne(() => CategoryEntity, (cat) => cat.products)
   category: CategoryEntity[];
 
-  @OneToMany(() => ReviewEntity, (rev) => rev.product)
+  @OneToMany(() => ReviewEntity, (rev) => rev.products)
   reviews: ReviewEntity[];
 
-  @OneToMany(() => OrdersProductsEntity, (op) => op.product)
+  @OneToMany(() => OrdersProductsEntity, (op) => op.products)
   products: OrdersProductsEntity[];
 }
