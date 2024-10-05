@@ -52,3 +52,4 @@ export class CategoriesService {
     return `This action removes a #${id} category`;
   }
 }
+
